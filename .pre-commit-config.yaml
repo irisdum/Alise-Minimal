@@ -17,3 +17,29 @@ repos:
       args: [ --fix ]
     # Run the formatter.
     - id: ruff-format
+
+- repo: https://github.com/PyCQA/isort
+  rev: 5.13.2
+  hooks:
+  - id: isort
+- repo: https://github.com/psf/black-pre-commit-mirror
+  rev: 24.1.1
+  hooks:
+  - id: black
+- repo: https://github.com/PyCQA/flake8
+  rev: 7.0.0
+  hooks:
+  - id: flake8
+  ## You can add flake8 plugins via `additional_dependencies`:
+  #  additional_dependencies: [flake8-bugbear]
+- repo: https://github.com/asottile/pyupgrade
+  rev: v3.15.0
+  hooks:
+  - id: pyupgrade
+    args: [--py310-plus]
+- repo: https://github.com/dosisod/refurb
+  rev: v1.28.0
+  hooks:
+  - id: refurb
+    additional_dependencies:
+        - mypy<1.7 # SEE: https://github.com/dosisod/refurb/issues/305

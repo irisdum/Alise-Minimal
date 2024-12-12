@@ -8,3 +8,8 @@ test:
 	pytest tests/
 
 check: ruff mypy test
+
+pylint:
+	pylint --ignore=$(PYLINT_IGNORED) src/ tests/ --load-plugins=perflint
+
+check: pylint ruff mypy test

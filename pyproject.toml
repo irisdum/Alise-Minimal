@@ -6,6 +6,9 @@ name = "alise_minimal"
 requires-python = ">= 3.11"
 version = "0.1.0"
 
+[project.optional-dependencies]
+dev = ["perflint>=0.8.1,<0.9", "isort", "black>=24.10.0,<25", "pyupgrade>=3.19.0,<4", "flake8", "autowalrus"]
+
 [build-system]
 build-backend = "hatchling.build"
 requires = ["hatchling"]
@@ -19,9 +22,7 @@ alise_minimal = { path = ".", editable = true }
 
 [tool.pixi.tasks]
 
-[tool.pixi.pypi-options]
-index-url = "https://pypi.org/simple"
-extra-index-urls = ["https://download.pytorch.org/whl/cpu"]
+
 
 [tool.pixi.dependencies]
 lightning = ">=2.4.0,<3"
@@ -37,6 +38,7 @@ pytest-cov = ">=6.0.0,<7"
 mypy = ">=1.13.0,<2"
 sphinx = ">=8.1.3,<9"
 hypothesis = ">=6.122.3,<7"
+pylint = ">=3.3.2,<4"
 
 [tool.pixi.environments]
 dev = { features = ["dev"], solve-group = "default" }
