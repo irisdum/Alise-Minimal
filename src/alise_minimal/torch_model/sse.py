@@ -1,16 +1,20 @@
 """
-File which contains relevant spectral spatial encoder. These architectures process images and do not take into account any temporal dimension.
+File which contains relevant spectral spatial encoder.
+These architectures process images and do not
+take into account any temporal dimension.
 """
 
-import torch
-from typing_extensions import Literal
+from typing import Literal, no_type_check
 
-from torch import nn as nn, Tensor
+import torch
+from torch import Tensor
+from torch import nn as nn
 
 
 class Unet(nn.Module):
     """
-    Inspired by https://github.com/VSainteuf/utae-paps/blob/main/src/backbones/utae.py
+    Inspired by
+    https://github.com/VSainteuf/utae-paps/blob/main/src/backbones/utae.py
     """
 
     def __init__(
@@ -90,16 +94,17 @@ class Unet(nn.Module):
             ]
         )
 
+    @no_type_check
     def forward(self, input: Tensor):
         """
 
         Parameters
         ----------
         input : Tensor (B,C,H,W)
-
         Returns
         -------
-        either a Tensor of size (B,C,H,W)  or if returns_map is set to True a Tensor of size
+        either a Tensor of size (B,C,H,W)  or if returns_map is s
+        et to True a Tensor of size
         B,C,H,W and well as a list of all intermediate feature maps
         """
         dtype = input.dtype
@@ -128,6 +133,7 @@ class Unet(nn.Module):
 
 
 class UpConvBlock(nn.Module):
+    @no_type_check
     def __init__(
         self,
         d_in,
@@ -175,6 +181,7 @@ class UpConvBlock(nn.Module):
             nkernels=[d_out, final_out], norm=norm, padding_mode=padding_mode
         )
 
+    @no_type_check
     def forward(self, input, skip):
         out = self.up(input)
         out = torch.cat([out, self.skip_conv(skip)], dim=1)
@@ -222,6 +229,7 @@ class DownConvBlock(nn.Module):
 
 
 class ConvLayer(nn.Module):
+    @no_type_check
     def __init__(
         self,
         nkernels,
@@ -270,6 +278,7 @@ class ConvLayer(nn.Module):
                 layers.append(nn.ReLU())
         self.conv = nn.Sequential(*layers)
 
+    @no_type_check
     def forward(self, input):
         return self.conv(input)
 
