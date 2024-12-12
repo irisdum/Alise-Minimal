@@ -31,9 +31,14 @@ ruff = "*"
 pre-commit = ">=4.0.1,<5"
 pytest = ">=8.3.4,<9"
 pytest-cov = ">=6.0.0,<7"
+mypy = ">=1.13.0,<2"
 
 [tool.pixi.environments]
 dev = { features = ["dev"], solve-group = "default" }
 
 [tool.pytest.ini_options]
 addopts = "--cov=alise_minimal"
+
+[tool.mypy]
+python_version = "3.13"
+check_untyped_defs = true
