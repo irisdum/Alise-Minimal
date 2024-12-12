@@ -5,7 +5,6 @@ environments:
     - url: https://conda.anaconda.org/conda-forge/
     indexes:
     - https://pypi.org/simple
-    - https://download.pytorch.org/whl/cpu
     packages:
       linux-64:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
@@ -18,6 +17,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/charset-normalizer-3.4.0-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/colorama-0.4.6-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/cpython-3.13.1-py313hd8ed1ab_102.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/einops-0.8.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/filelock-3.16.1-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/freetype-2.12.1-h267a509_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/fsspec-2024.10.0-pyhd8ed1ab_1.conda
@@ -110,7 +110,6 @@ environments:
     - url: https://conda.anaconda.org/conda-forge/
     indexes:
     - https://pypi.org/simple
-    - https://download.pytorch.org/whl/cpu
     packages:
       linux-64:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
@@ -133,6 +132,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/dill-0.3.9-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/distlib-0.3.9-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/docutils-0.21.2-pyhd8ed1ab_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/einops-0.8.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/exceptiongroup-1.2.2-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/filelock-3.16.1-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/freetype-2.12.1-h267a509_2.conda
@@ -255,8 +255,11 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstandard-0.23.0-py312hef9b889_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.6-ha6fb4c9_0.conda
       - pypi: https://files.pythonhosted.org/packages/4e/3e/443ef8bc1fbda78e61f79157f303893f3fddf19ca3c8989b163eb3469a12/black-24.10.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_28_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/d9/42/65004373ac4617464f35ed15931b30d764f53cdd30cc78d5aea349c8c050/flake8-7.1.1-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/cc/20/ff623b09d963f88bfde16306a54e12ee5ea43e9b597108672ff3a408aad6/pathspec-0.12.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/61/5d/7af2b631ffab0a6012638a6c020f9c7748c1cac8cc950678aad967b85fe1/perflint-0.8.1-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/3a/d8/a211b3f85e99a0daa2ddec96c949cac6824bd305b040571b82a03dd62636/pycodestyle-2.12.1-py2.py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/d4/d7/f1b7db88d8e4417c5d47adad627a93547f44bdc9028372dbd2313f34a855/pyflakes-3.2.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/68/80/4577806dc6c6b38b0b8b8c65270becc13e9ec9918a5e2e2a66914d27ed0b/pyupgrade-3.19.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/87/ba/576aac29b10dfa49a6ce650001d1bb31f81e734660555eaf144bfe5b8995/tokenize_rt-6.1.0-py2.py3-none-any.whl
       - pypi: .
@@ -312,12 +315,13 @@ packages:
   name: alise-minimal
   version: 0.1.0
   path: .
-  sha256: c180a03f59e77b207d1b2f382a2b3a1d828dbcc9c194120ec78a0d1c13e655bd
+  sha256: 6a06da25803706f77ebb79ec40cd10a2a3a12f2f62fa16e50cca68fed6bbe47f
   requires_dist:
   - perflint>=0.8.1,<0.9 ; extra == 'dev'
   - isort ; extra == 'dev'
   - black>=24.10.0,<25 ; extra == 'dev'
-  - pyupgrade ; extra == 'dev'
+  - pyupgrade>=3.19.0,<4 ; extra == 'dev'
+  - flake8 ; extra == 'dev'
   requires_python: '>=3.11'
   editable: true
 - kind: conda
@@ -706,6 +710,23 @@ packages:
   size: 402700
   timestamp: 1733217860944
 - kind: conda
+  name: einops
+  version: 0.8.0
+  build: pyhd8ed1ab_0
+  subdir: noarch
+  noarch: python
+  url: https://conda.anaconda.org/conda-forge/noarch/einops-0.8.0-pyhd8ed1ab_0.conda
+  sha256: 8f706a97a658e5c3c037cc8456819f22e6b87efef85394a0c24574424e890cdc
+  md5: 6f8dfe6d33eeda92e9ecc2b8bda06c94
+  depends:
+  - python >=3.8
+  license: MIT
+  license_family: MIT
+  purls:
+  - pkg:pypi/einops?source=hash-mapping
+  size: 40293
+  timestamp: 1714285282316
+- kind: conda
   name: exceptiongroup
   version: 1.2.2
   build: pyhd8ed1ab_1
@@ -739,6 +760,16 @@ packages:
   - pkg:pypi/filelock?source=compressed-mapping
   size: 17441
   timestamp: 1733240909987
+- kind: pypi
+  name: flake8
+  version: 7.1.1
+  url: https://files.pythonhosted.org/packages/d9/42/65004373ac4617464f35ed15931b30d764f53cdd30cc78d5aea349c8c050/flake8-7.1.1-py2.py3-none-any.whl
+  sha256: 597477df7860daa5aa0fdd84bf5208a043ab96b8e96ab708770ae0364dd03213
+  requires_dist:
+  - mccabe>=0.7.0,<0.8.0
+  - pycodestyle>=2.12.0,<2.13.0
+  - pyflakes>=3.2.0,<3.3.0
+  requires_python: '>=3.8.1'
 - kind: conda
   name: freetype
   version: 2.12.1
@@ -2238,6 +2269,12 @@ packages:
   purls: []
   size: 8252
   timestamp: 1726802366959
+- kind: pypi
+  name: pycodestyle
+  version: 2.12.1
+  url: https://files.pythonhosted.org/packages/3a/d8/a211b3f85e99a0daa2ddec96c949cac6824bd305b040571b82a03dd62636/pycodestyle-2.12.1-py2.py3-none-any.whl
+  sha256: 46f0fb92069a7c28ab7bb558f05bfc0110dac69a0cd23c61ea0040283a9d78b3
+  requires_python: '>=3.8'
 - kind: conda
   name: pycparser
   version: '2.22'
@@ -2256,6 +2293,12 @@ packages:
   purls: []
   size: 110100
   timestamp: 1733195786147
+- kind: pypi
+  name: pyflakes
+  version: 3.2.0
+  url: https://files.pythonhosted.org/packages/d4/d7/f1b7db88d8e4417c5d47adad627a93547f44bdc9028372dbd2313f34a855/pyflakes-3.2.0-py2.py3-none-any.whl
+  sha256: 84b5be138a2dfbb40689ca07e2152deb896a65c3a3e24c251c5c62489568074a
+  requires_python: '>=3.8'
 - kind: conda
   name: pygments
   version: 2.18.0
