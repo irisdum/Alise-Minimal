@@ -3,8 +3,8 @@ Contains all class for temporal positional encoding
 """
 
 import torch
+import torch.nn as nn
 from torch import Tensor
-from torch import nn as nn
 
 
 class PositionalEncoder(nn.Module):

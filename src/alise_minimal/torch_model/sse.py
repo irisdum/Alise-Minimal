@@ -4,11 +4,46 @@ These architectures process images and do not
 take into account any temporal dimension.
 """
 
+from dataclasses import dataclass
 from typing import Literal, no_type_check
 
 import torch
 from torch import Tensor
 from torch import nn as nn
+
+
+@dataclass
+class UnetConfig:
+    """
+
+    Parameters
+    ----------
+    inplanes : input number of channels
+    planes :
+    encoder_widths : list of the number of channels in the Unet encoder
+    decoder_widths : list of the number of channels in the Unet decoder
+    encoder_norm : normalisation type description
+    padding_mode : padding type as defined in Conv2d
+    decoding_norm : normalisation in the decoder
+    return_maps : wether all intermetdiate eafture maps are returned
+    str_conv_k : kernel size
+    str_conv_s : stride size
+    str_conv_p : padding size
+    skip_conv_norm : normalisation in the skip connections
+    """
+
+    inplanes: int
+    planes: int
+    encoder_widths: list
+    decoder_widths: list
+    encoder_norm: Literal["group", "batch"] = "group"
+    padding_mode: str = "reflect"
+    decoding_norm: Literal["group", "batch"] = "group"
+    return_maps: bool = False
+    str_conv_k: int = 4
+    str_conv_s: int = 2
+    str_conv_p: int = 1
+    skip_conv_norm: Literal["group", "batch"] = "group"
 
 
 class Unet(nn.Module):
@@ -17,78 +52,48 @@ class Unet(nn.Module):
     https://github.com/VSainteuf/utae-paps/blob/main/src/backbones/utae.py
     """
 
-    def __init__(
-        self,
-        inplanes: int,
-        planes: int,
-        encoder_widths: list,
-        decoder_widths: list,
-        encoder_norm: Literal["group", "batch"] = "group",
-        padding_mode: str = "reflect",
-        decoding_norm: Literal["group", "batch"] = "group",
-        return_maps: bool = False,
-        str_conv_k: int = 4,
-        str_conv_s: int = 2,
-        str_conv_p: int = 1,
-        skip_conv_norm: Literal["group", "batch"] = "group",
-    ):
-        """
-
-        Parameters
-        ----------
-        inplanes : input number of channels
-        planes :
-        encoder_widths : list of the number of channels in the Unet encoder
-        decoder_widths : list of the number of channels in the Unet decoder
-        encoder_norm : normalisation type description
-        padding_mode : padding type as defined in Conv2d
-        decoding_norm : normalisation in the decoder
-        return_maps : wether all intermetdiate eafture maps are returned
-        str_conv_k : kernel size
-        str_conv_s : stride size
-        str_conv_p : padding size
-        skip_conv_norm : normalisation in the skip connections
-        """
+    def __init__(self, config: UnetConfig):
         super().__init__()
-        self.return_maps = return_maps
-        self.encoder_widths = encoder_widths
+        self.return_maps = config.return_maps
+        self.encoder_widths = config.encoder_widths
 
-        self.decoder_widths = decoder_widths
+        self.decoder_widths = config.decoder_widths
         self.in_conv = ConvBlock(
-            nkernels=[inplanes] + [encoder_widths[0], encoder_widths[0]],
-            norm=encoder_norm,
-            padding_mode=padding_mode,
+            nkernels=[config.inplanes]
+            + [config.encoder_widths[0], config.encoder_widths[0]],
+            norm=config.encoder_norm,
+            padding_mode=config.padding_mode,
         )
         self.out_conv = ConvBlock(
-            nkernels=[decoder_widths[0], planes],
-            norm=decoding_norm,
-            padding_mode=padding_mode,
+            nkernels=[config.decoder_widths[0], config.planes],
+            norm=config.decoding_norm,
+            padding_mode=config.padding_mode,
         )
-        self.n_stages = len(encoder_widths)
+        self.n_stages = len(config.encoder_widths)
         self.down_blocks = nn.ModuleList(
             DownConvBlock(
-                d_in=encoder_widths[i],
-                d_out=encoder_widths[i + 1],
-                k=str_conv_k,
-                s=str_conv_s,
-                p=str_conv_p,
-                norm=encoder_norm,
-                padding_mode=padding_mode,
+                d_in=config.encoder_widths[i],
+                d_out=config.encoder_widths[i + 1],
+                k=config.str_conv_k,
+                s=config.str_conv_s,
+                p=config.str_conv_p,
+                norm=config.encoder_norm,
+                padding_mode=config.padding_mode,
             )
             for i in range(self.n_stages - 1)
         )
         self.up_blocks = nn.ModuleList(
             [
                 UpConvBlock(
-                    d_in=decoder_widths[i],
-                    d_out=decoder_widths[i - 1],
-                    d_skip=encoder_widths[i - 1],
-                    k=str_conv_k,
-                    s=str_conv_s,
-                    p=str_conv_p,
-                    norm=decoding_norm,
-                    padding_mode=padding_mode,
-                    skip_conv_norm=skip_conv_norm,
+                    d_in=config.decoder_widths[i],
+                    d_out=config.decoder_widths[i - 1],
+                    d_skip=config.encoder_widths[i - 1],
+                    k=config.str_conv_k,
+                    s=config.str_conv_s,
+                    p=config.str_conv_p,
+                    norm=config.decoding_norm,
+                    padding_mode=config.padding_mode,
+                    skip_conv_norm=config.skip_conv_norm,
                 )
                 for i in range(self.n_stages - 1, 0, -1)
             ]
