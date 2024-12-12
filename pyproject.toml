@@ -45,6 +45,7 @@ dev = { features = ["dev"], solve-group = "default" }
 
 [tool.pytest.ini_options]
 addopts = "--cov=alise_minimal"
+testpaths = ["tests"]
 
 [tool.mypy]
 python_version = "3.13"
