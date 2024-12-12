@@ -7,7 +7,7 @@ requires-python = ">= 3.11"
 version = "0.1.0"
 
 [project.optional-dependencies]
-dev = ["perflint>=0.8.1,<0.9", "isort", "black>=24.10.0,<25", "pyupgrade>=3.19.0,<4", "flake8", "autowalrus"]
+dev = ["perflint>=0.8.1,<0.9", "isort", "black>=24.10.0,<25", "pyupgrade>=3.19.0,<4", "flake8"]
 
 [build-system]
 build-backend = "hatchling.build"
@@ -29,6 +29,7 @@ lightning = ">=2.4.0,<3"
 pytorch = ">=2.5.1,<3"
 torchmetrics = ">=1.5.2,<2"
 torchvision = ">=0.20.1,<0.21"
+einops = ">=0.8.0,<0.9"
 
 [tool.pixi.feature.dev.dependencies]
 ruff = "*"
