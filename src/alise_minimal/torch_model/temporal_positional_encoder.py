@@ -2,14 +2,16 @@
 Contains all class for temporal positional encoding
 """
 
-from torch import nn as nn, Tensor
 import torch
+from torch import Tensor
+from torch import nn as nn
 
 
 class PositionalEncoder(nn.Module):
     """
     Traditional Positional encoding as defined by Vaswani 2017.
-    Implementation inspired by https://github.com/VSainteuf/utae-paps/blob/main/src/backbones/positional_encoding.py
+    Implementation inspired by
+    https://github.com/VSainteuf/utae-paps/blob/main/src/backbones/positional_encoding.py
     """
 
     def __init__(self, d: int, T: int = 1000, offset: int = 0):

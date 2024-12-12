@@ -1,5 +1,6 @@
-from alise_minimal.torch_model.temporal_positional_encoder import PositionalEncoder
 import torch
+
+from alise_minimal.torch_model.temporal_positional_encoder import PositionalEncoder
 
 
 def test_forward():
