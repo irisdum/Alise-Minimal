@@ -17,9 +17,8 @@ class PatchEmbedding(nn.Module):
 
         Parameters
         ----------
-        sse : SPectro spatial encoder
+        sse : Spectro spatial encoder
         tpe : Temporal positional Encoder
-        merge_opt : indicate how temporal information is integrated to feature maps
         """
         super().__init__()
         self.tpe = tpe

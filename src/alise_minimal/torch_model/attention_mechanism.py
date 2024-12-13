@@ -3,6 +3,7 @@ Attention mechanism employed
 """
 
 import logging
+from dataclasses import dataclass
 
 import numpy as np
 import torch
@@ -12,6 +13,14 @@ from torch import Tensor, nn
 my_logger = logging.getLogger(__name__)
 
 
+@dataclass
+class ConfigLQMHA:
+    n_head: int
+    d_k: int
+    d_in: int
+    n_q: int
+
+
 class LearnedQMultiHeadAttention(nn.Module):
     """Multi-Head Attention module
     Modified from github.com/jadore801120/attention-is-all-you-need-pytorch
@@ -19,18 +28,20 @@ class LearnedQMultiHeadAttention(nn.Module):
      Value features are split along the heads
     """
 
-    def __init__(self, n_head: int, d_k: int, d_in: int, n_q: int):
+    def __init__(self, config: ConfigLQMHA):
         super().__init__()
-        self.n_head = n_head
-        self.d_k = d_k
-        self.d_in = d_in
-        self.n_q = n_q
-        self.Q = nn.Parameter(torch.zeros((n_head, n_q, d_k))).requires_grad_(True)
-        nn.init.normal_(self.Q, mean=0, std=np.sqrt(2.0 / (d_k)))
-        self.fc1_k = nn.Linear(d_in, n_head * d_k, bias=False)
-        nn.init.normal_(self.fc1_k.weight, mean=0, std=np.sqrt(2.0 / (d_k)))
+        self.n_head = config.n_head
+        self.d_k = config.d_k
+        self.d_in = config.d_in
+        self.n_q = config.n_q
+        self.Q = nn.Parameter(
+            torch.zeros((config.n_head, config.n_q, config.d_k))
+        ).requires_grad_(True)
+        nn.init.normal_(self.Q, mean=0, std=np.sqrt(2.0 / (config.d_k)))
+        self.fc1_k = nn.Linear(config.d_in, config.n_head * config.d_k, bias=False)
+        nn.init.normal_(self.fc1_k.weight, mean=0, std=np.sqrt(2.0 / (config.d_k)))
 
-    def forward(self, X: Tensor, pad_mask: Tensor = None):
+    def forward(self, X: Tensor, pad_mask: Tensor = None) -> Tensor:
         """
 
         Args:
@@ -38,7 +49,7 @@ class LearnedQMultiHeadAttention(nn.Module):
             C must be divisible by n_head
             pad_mask (): (B,T) True means the value should take part in attention
         Returns:
-
+        the projected sequence a Tensor of size (B,nq,C)
         """
         d_k, n_head = self.d_k, self.n_head
         sz_b, seq_len, _ = X.size()
