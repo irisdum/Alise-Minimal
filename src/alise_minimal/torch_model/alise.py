@@ -19,6 +19,8 @@ from alise_minimal.torch_model.temporal_positional_encoder import PositionalEnco
 
 @dataclass
 class TransformerLayerConfig:
+    """ """
+
     d_model: int = 64
     nhead: int = 4
     dim_feedforward: int = 128
@@ -28,6 +30,8 @@ class TransformerLayerConfig:
 
 @dataclass
 class TransformerConfig:
+    """ " """
+
     layer_config: TransformerLayerConfig
     num_layers: int = 3
 
@@ -43,6 +47,16 @@ def build_transformer(transformer_config: TransformerConfig) -> TransformerEncod
     return TransformerEncoder(
         encoder_layer=layer, num_layers=transformer_config.num_layers
     )
+
+
+@dataclass
+class ALISEConfigBuild:
+    """ """
+
+    unet_config: UnetConfig
+    transformer_config: TransformerConfig
+    temp_proj_config: ConfigLQMHA
+    pe_T: int = 3000
 
 
 class ALISE(nn.Module):
@@ -91,17 +105,12 @@ class ALISE(nn.Module):
         return x
 
 
-def build_alise(
-    unet_config: UnetConfig,
-    transformer_config: TransformerConfig,
-    temp_proj_config: ConfigLQMHA,
-    pe_T: int = 3000,
-) -> ALISE:
-    sse = Unet(unet_config)
-    tpe = PositionalEncoder(d=unet_config.planes, T=pe_T)
+def build_alise(config: ALISEConfigBuild) -> ALISE:
+    sse = Unet(config.unet_config)
+    tpe = PositionalEncoder(d=config.unet_config.planes, T=config.pe_T)
     patch_embed = PatchEmbedding(sse=sse, tpe=tpe)
-    temporal_encoder = build_transformer(transformer_config)
-    temp_proj = LearnedQMultiHeadAttention(config=temp_proj_config)
+    temporal_encoder = build_transformer(config.transformer_config)
+    temp_proj = LearnedQMultiHeadAttention(config=config.temp_proj_config)
     return ALISE(
         patch_embedding=patch_embed,
         temporal_encoder=temporal_encoder,
