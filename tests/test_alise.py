@@ -1,6 +1,7 @@
 import torch
 
 from alise_minimal.torch_model.alise import (
+    ALISEConfigBuild,
     TransformerConfig,
     TransformerLayerConfig,
     build_alise,
@@ -27,12 +28,13 @@ def test_forward():
     transformer_config = TransformerConfig(
         layer_config=transformer_layer_config, num_layers=2
     )
-    alise = build_alise(
+    alise_build_config = ALISEConfigBuild(
         unet_config=unet_config,
         transformer_config=transformer_config,
         temp_proj_config=temp_proj_config,
         pe_T=pe_T,
     )
+    alise = build_alise(alise_build_config)
     input = torch.rand(B, T, C, H, W)
     positions = torch.rand(B, T)
     pad_mask = torch.zeros(B, T).bool()
