@@ -2,8 +2,10 @@ defaults:
   - _self_
   - callbacks: minimal_downstream.yaml
   - loggers: default.yaml
-
-previous_ckpt: null #if defined restart training from that checkpoint
+  - module: alise_fs_seg.yaml
+  - datamodule: croprot.yaml
+  - train: downstream_fs.yaml
+ckpt_path: null #if defin ed restart training from that checkpoint
 verbose: 0
 
 hydra:

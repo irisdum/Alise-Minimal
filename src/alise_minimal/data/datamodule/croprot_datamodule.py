@@ -45,8 +45,9 @@ class CropRotDataModule(TemplateDataModule):
         if dict_classes is None:
             dict_classes = dict(
                 zip(
-                    [5, 6, 7, 8, 9, 10, 11, 12, 13],
+                    [0, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                     [
+                        "background",
                         "rapeseed",
                         "cereal",
                         "proteaginous",
@@ -62,6 +63,7 @@ class CropRotDataModule(TemplateDataModule):
         self.dict_classes = dict_classes
         self.labels = list(self.dict_classes.values())
         self.num_classes = max(self.dict_classes.keys())
+        print(self.num_classes)
         self.data_train = CropRotDataset(
             dataset_path=self.dataset_path,
             dataset_name=f"{self.dataset_name}_train.csv",
@@ -158,15 +160,12 @@ class CropRotDataModule(TemplateDataModule):
         -------
 
         """
-        if batch.year1.s2 is not None:
-            year_1_s2 = apply_transform_basic(
-                batch.year1.s2, self.s2_transform.transform
-            )
-            year_2_s2 = apply_transform_basic(
-                batch.year2.s2, self.s2_transform.transform
-            )
-            batch.year1.s2_doy = batch.year1.s2_doy.to(year_1_s2)
-            batch.year2.s2_doy = batch.year2.s2_doy.to(year_2_s2)
-            batch.year1.s2 = year_1_s2
-            batch.year2.s2 = year_2_s2
+
+        year_1_s2 = apply_transform_basic(batch.year1.sits, self.s2_transform.transform)
+        year_2_s2 = apply_transform_basic(batch.year2.sits, self.s2_transform.transform)
+        # batch.year1.positions.to()
+        # batch.year2.s2_doy = batch.year2.s2_doy.to(year_2_s2)
+        batch.year1.sits = year_1_s2
+        batch.year2.sits = year_2_s2
+
         return batch

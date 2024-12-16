@@ -87,7 +87,7 @@ def from_dict2cdinput(input_dict: dict) -> CDInput:
     """
     year1 = from_dict2sits(input_dict["year1"])
     year2 = from_dict2sits(input_dict["year2"])
-    return CDInput(year1=year1, year2=year2, raster=input_dict["raster"])
+    return CDInput(year1=year1, year2=year2, raster=input_dict["raster"].long())
 
 
 class CropRotDataset(Dataset):
@@ -142,5 +142,5 @@ class CropRotDataset(Dataset):
         cd_sample = from_dict2cdinput(load_sample)
         mask_labels = cd_sample.raster[0, ...] != 0
         padded_sample = cd_sample.apply_padding(self.paddmmdc)
-        padded_sample.mask_raster = mask_labels
+        padded_sample.mask_raster = mask_labels.long()
         return padded_sample

@@ -44,6 +44,7 @@ class AliseFSSeg(TemplateModule):
         -------
         the output of ALISE
         """
+
         x = self.model.forward(
             sits=batch.year1.sits,
             positions=batch.year1.positions,
@@ -60,7 +61,7 @@ class AliseFSSeg(TemplateModule):
 
     def training_step(self, batch: CDBInput, batch_idx: int) -> Tensor:
         out, loss = self.shared_step(batch)
-        self.train_metrics.update(out, batch.label)
+        self.train_metrics.update(out, batch.label[:, 0, ...])
         self.log(
             "train_loss",
             loss,
@@ -82,7 +83,7 @@ class AliseFSSeg(TemplateModule):
 
     def validation_step(self, batch: CDBInput, batch_idx: int):
         out, _ = self.shared_step(batch)
-        self.val_metrics.update(out, batch.label)
+        self.val_metrics.update(out, batch.label[:, 0, ...])
 
     def on_validation_epoch_end(self) -> None:
         self.val_metrics.compute()
@@ -95,7 +96,7 @@ class AliseFSSeg(TemplateModule):
 
     def test_step(self, batch: CDBInput, batch_idx: int):
         out, _ = self.shared_step(batch)
-        self.test_metrics.update(out, batch.label)
+        self.test_metrics.update(out, batch.label[:, 0, ...])
 
     def on_test_epoch_end(self) -> None:
         self.test_metrics.compute()

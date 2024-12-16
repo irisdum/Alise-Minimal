@@ -52,10 +52,10 @@ def load_train_config(config: DictConfig, num_class: int):
         metrics=MetricCollection(
             {
                 "accuracy": torchmetrics.Accuracy(
-                    task="multiclass", num_classes=num_class
+                    task="multiclass", num_classes=num_class + 1
                 ),
                 "precision": torchmetrics.Precision(
-                    task="multiclass", num_classes=num_class
+                    task="multiclass", num_classes=num_class + 1
                 ),
             }
         ),
@@ -92,11 +92,11 @@ def load_alisefs_module_from_config(
         unet_config=unet_config,
         transformer_config=transformer_config,
         temp_proj_config=temp_proj_config,
-        pe_T=config.pe_encoder.pe_T,
+        pe_T=config.module.pe_encoder.pe_T,
     )
     config_decoder = MLPDecoderConfig(
         inplanes=config.module.d_model * config.module.temp_proj_config.n_q,
-        planes=num_class,
+        planes=num_class + 1,
         d_hidden=config.module.config_decoder.d_hidden,
     )
     return build_alise_fs_seg(
@@ -114,10 +114,11 @@ def main(myconfig: DictConfig):
         my_logger.setLevel(logging.INFO)
     elif myconfig.verbose == 2:
         my_logger.setLevel(logging.DEBUG)
+    print(myconfig)
     callbacks = [instantiate(cb_conf) for _, cb_conf in myconfig.callbacks.items()]
     logger = [
         instantiate(logg_conf, save_dir=Path.cwd())
-        for _, logg_conf in myconfig.logger.items()
+        for _, logg_conf in myconfig.loggers.items()
     ]
     if myconfig.train.slurm_restart:
         print("Automatic restart")
