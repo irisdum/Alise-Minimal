@@ -30,24 +30,22 @@ def custom_collateitem_mmdc(batch: list[ItemTensorMMDC]) -> SITSBatch:
     cld_mask = None
     if batch[0].s2 is not None:
         s2 = torch.stack([b.s2.sits for b in batch])
-        s2_doy = torch.stack([b.s2.doy for b in batch])
+        s2_positions = torch.stack([b.s2.positions for b in batch])
         padd_s2 = torch.stack([b.s2.mask.padd_mask for b in batch]).bool()
         if batch[0].s2.mask.mask_cld is not None:
             cld_mask = torch.stack([b.s2.mask.mask_cld for b in batch])
-        if batch[0].s2.mask.mask_slc is not None:
-            slc_mask = torch.stack([b.s2.mask.mask_slc for b in batch])
+        if batch[0].s2.mask.mask_scl is not None:
+            slc_mask = torch.stack([b.s2.mask.mask_scl for b in batch])
             cld_mask[slc_mask == 0] = 1  # integrate no data in cloud mask
         else:
             my_logger.infor("No CLD MASK found ")
     else:
         s2 = None
-        s2_doy = None
+        s2_positions = None
         padd_s2 = None
 
     return SITSBatch(
-        sits=s2,
-        positions=s2_doy,
-        pad_mask=padd_s2,
+        sits=s2, positions=s2_positions, pad_mask=padd_s2, cld_mask=cld_mask
     )
 
 
