@@ -27,6 +27,7 @@ class CropRotDataModule(TemplateDataModule):
         prefetch_factor: int = 2,
         batch_size: int = 2,
         dict_classes: dict | None = None,
+        s2_band: list | None = None,
     ):
         super().__init__(
             dataset_path=dataset_path,
@@ -36,6 +37,7 @@ class CropRotDataModule(TemplateDataModule):
             num_workers=num_workers,
             prefetch_factor=prefetch_factor,
             batch_size=batch_size,
+            s2_band=s2_band,
         )
         self.s2_transform = load_transform_one_mod(
             path_dir_csv=self.path_dir_csv, mod="s2"
@@ -59,7 +61,7 @@ class CropRotDataModule(TemplateDataModule):
             )
         self.dict_classes = dict_classes
         self.labels = list(self.dict_classes.values())
-        self.num_classes = len(self.dict_classes)
+        self.num_classes = max(self.dict_classes.keys())
         self.data_train = CropRotDataset(
             dataset_path=self.dataset_path,
             dataset_name=f"{self.dataset_name}_train.csv",

@@ -2,6 +2,8 @@
 
 from lightning import LightningDataModule
 
+from alise_minimal.constant.dataset import S2_BAND
+
 
 class TemplateDataModule(LightningDataModule):
     """
@@ -17,6 +19,7 @@ class TemplateDataModule(LightningDataModule):
         num_workers: int = 2,
         prefetch_factor: int = 2,
         batch_size: int = 2,
+        s2_band: None | list = None,
     ):
         super().__init__()
         self.path_dir_csv = path_dir_csv
@@ -26,3 +29,6 @@ class TemplateDataModule(LightningDataModule):
         self.max_len_s2 = max_len_s2
         self.dataset_name = dataset_name
         self.dataset_path = dataset_path
+        if s2_band is None:
+            s2_band = S2_BAND
+        self.s2_band = s2_band

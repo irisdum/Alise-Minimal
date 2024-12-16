@@ -6,7 +6,7 @@ from einops import rearrange
 from torch import Tensor, nn
 from torchmetrics import MetricCollection
 
-from alise_minimal.data.batch_class import SegBatch
+from alise_minimal.data.batch_class import CDBInput
 from alise_minimal.lightning_module.template_module import TemplateModule, TrainConfig
 from alise_minimal.torch_model.alise import ALISE, ALISEConfigBuild, build_alise
 from alise_minimal.torch_model.decoder import MLPDecoder, MLPDecoderConfig
@@ -33,7 +33,7 @@ class AliseFSSeg(TemplateModule):
         self.val_metrics = metrics.clone(prefix="val_")
         self.test_metrics = metrics.clone(prefix="test_")
 
-    def forward(self, batch: SegBatch) -> Tensor:
+    def forward(self, batch: CDBInput) -> Tensor:
         """
 
         Parameters
@@ -45,20 +45,22 @@ class AliseFSSeg(TemplateModule):
         the output of ALISE
         """
         x = self.model.forward(
-            sits=batch.sits, positions=batch.positions, pad_mask=batch.pad_mask
+            sits=batch.year1.sits,
+            positions=batch.year1.positions,
+            pad_mask=batch.year1.pad_mask,
         )
         x = rearrange(x, "B T C H W -> B H W (T C)")
         x = self.decoder(x)
         return rearrange(x, "B H W F -> B F H W")
 
-    def shared_step(self, batch: SegBatch) -> tuple[Tensor, Tensor]:
+    def shared_step(self, batch: CDBInput) -> tuple[Tensor, Tensor]:
         out = self.forward(batch)
-        loss = self.loss(out, batch.labels)
+        loss = self.loss(out, batch.label[:, 0, ...])
         return out, loss
 
-    def training_step(self, batch: SegBatch, batch_idx: int) -> Tensor:
+    def training_step(self, batch: CDBInput, batch_idx: int) -> Tensor:
         out, loss = self.shared_step(batch)
-        self.train_metrics.update(out, batch.labels)
+        self.train_metrics.update(out, batch.label)
         self.log(
             "train_loss",
             loss,
@@ -78,9 +80,9 @@ class AliseFSSeg(TemplateModule):
             prog_bar=True,
         )
 
-    def validation_step(self, batch: SegBatch, batch_idx: int):
+    def validation_step(self, batch: CDBInput, batch_idx: int):
         out, _ = self.shared_step(batch)
-        self.val_metrics.update(out, batch.labels)
+        self.val_metrics.update(out, batch.label)
 
     def on_validation_epoch_end(self) -> None:
         self.val_metrics.compute()
@@ -91,9 +93,9 @@ class AliseFSSeg(TemplateModule):
             prog_bar=True,
         )
 
-    def test_step(self, batch: SegBatch, batch_idx: int):
+    def test_step(self, batch: CDBInput, batch_idx: int):
         out, _ = self.shared_step(batch)
-        self.test_metrics.update(out, batch.labels)
+        self.test_metrics.update(out, batch.label)
 
     def on_test_epoch_end(self) -> None:
         self.test_metrics.compute()
