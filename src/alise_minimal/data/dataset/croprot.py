@@ -127,7 +127,8 @@ class CropRotDataset(Dataset):
             os.path.join(
                 self.folder,
                 paths,
-            )
+            ),
+            weights_only=False,
         )
         cd_sample = from_dict2cdinput(load_sample)
         mask_labels = cd_sample.raster[0, ...] != 0
