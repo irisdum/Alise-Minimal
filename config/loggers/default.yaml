@@ -1,0 +1,6 @@
+tensorboard:
+  _target_: lightning.pytorch.loggers.TensorBoardLogger
+  log_graph: true #true
+  save_dir: /home/ad/dumeuri/trainings/
+csv:
+  _target_: lightning.pytorch.loggers.csv_logs.CSVLogger

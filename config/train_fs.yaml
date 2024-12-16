@@ -1,0 +1,18 @@
+defaults:
+  - _self_
+  - callbacks: minimal_downstream.yaml
+  - loggers: default.yaml
+
+previous_ckpt: null #if defined restart training from that checkpoint
+verbose: 0
+
+hydra:
+  run:
+    dir: ${path_export_dir}/${hydra.job.name}/nq${module.temp_proj_config.n_q}/requeue
+  sweep:
+    dir: ${path_export_dir}${hydra.job.name}/requeue
+    subdir: ${hydra.job.override_dirname}
+  job:
+    name: croprot_fully_supervised
+
+path_export_dir: /home/ad/dumeuri/trainings/alise_works

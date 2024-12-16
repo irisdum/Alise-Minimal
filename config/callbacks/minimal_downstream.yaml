@@ -1,0 +1,17 @@
+learningrate:
+  _target_: lightning.pytorch.callbacks.LearningRateMonitor
+
+stopping:
+  _target_: lightning.pytorch.callbacks.EarlyStopping
+  monitor: val_loss
+  mode: min
+  patience: 20
+
+checkpoint:
+  _target_: lightning.pytorch.callbacks.ModelCheckpoint
+  monitor: val_loss
+  verbose: true
+  save_top_k: 2
+  save_last: true
+  auto_insert_metric_name: true
+  filename: "metric-{epoch:02d}-{val_loss:.4f}"

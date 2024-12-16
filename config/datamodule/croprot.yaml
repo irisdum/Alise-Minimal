@@ -1,0 +1,6 @@
+_target_: alise_minimal.data.datamodule.croprot_datamodule.CropRotDataModule
+dataset_path: /home/ad/dumeuri/DeepChange/PASTIS_CD/PASTIS_CD/PASTIS_PT_MASK_SHARE2
+num_workers: 4
+max_len: 60
+path_dir_csv: /home/ad/dumeuri/DeepChange/MMDC_OE
+batch_size: 2

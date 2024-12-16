@@ -1,0 +1,17 @@
+d_model: 64
+unet_config:
+  encoder_widths: [64, 64, 64, 128]
+  decoder_widths: [32, 32, 64, 128]
+transformer_layer_config:
+  nhead: 4
+  dim_feedforward: 128
+transformer_config:
+  num_layers: 2
+temp_proj_config:
+  n_head: 4
+  d_k: 32
+  n_q: 10
+pe_encoder:
+  pe_T: 3000
+config_decoder:
+  d_hidden: 64
