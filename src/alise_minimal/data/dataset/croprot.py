@@ -14,6 +14,28 @@ from alise_minimal.data.dataset.sample_class import (
 )
 
 
+def create_dataset_csv(dataset_path: str, dataset_name: str):
+    """
+    create a csv which contains all files which ends with .pt in the
+     directory dataset_path
+    Parameters
+    ----------
+    dataset_path : directory containing all .pt files
+    dataset_name : name in the output csv file
+
+    Returns
+    -------
+
+    """
+    iterate_items = Path(dataset_path).rglob("*.pt")
+    l_files = []
+    for idx, path in enumerate(iterate_items):
+        # print(path)
+        l_files += [path]
+    df = pd.DataFrame(l_files, columns=["path"])
+    df.to_csv(Path(dataset_path).joinpath(f"{dataset_name}.csv"))
+
+
 def from_dict2mask(input_dict) -> MaskMod:
     """
 
@@ -60,7 +82,7 @@ def from_dict2cdinput(input_dict: dict) -> CDInput:
     return CDInput(year1=year1, year2=year2, raster=input_dict["raster"])
 
 
-class PASTISCDDataset(Dataset):
+class CropRotDataset(Dataset):
     def __init__(
         self,
         dataset_path: str,
@@ -76,6 +98,9 @@ class PASTISCDDataset(Dataset):
         max_len_s2 : the output length of each SITS
         """
         super().__init__()
+        path_dataset = Path(dataset_path).joinpath(f"{dataset_name}.csv")
+        if not path_dataset.exists():
+            create_dataset_csv(dataset_path, dataset_name)
         self.metadata = pd.read_csv(Path(dataset_path).joinpath(f"{dataset_name}.csv"))
         self.metadata.sort_index(inplace=True)
         self.id_patches = self.metadata["path"]
