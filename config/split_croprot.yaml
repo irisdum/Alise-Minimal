@@ -1,0 +1,8 @@
+dataset_path: /home/ad/dumeuri/DeepChange/PASTIS_CD/PASTIS_CD/PASTIS_PT_MASK_SHARE2
+train_per: 0.6
+val_per: 0.15
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .
