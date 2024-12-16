@@ -44,8 +44,8 @@ def test_cd_input_apply_padding():
     cd_sample = CDInput(
         year1=year_1,
         year2=year_2,
-        labels=torch.randn(H, W),
-        mask_labels=torch.ones(H, W),
+        raster=torch.randn(H, W),
+        mask_raster=torch.ones(H, W),
     )
     padd = PaddingMMDC(max_len_s2=max_len)
     padded_cd_sample = cd_sample.apply_padding(paddmmdc=padd)

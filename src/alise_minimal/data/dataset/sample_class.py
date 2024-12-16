@@ -119,13 +119,13 @@ class CDInput:
 
     year1: ItemTensorMMDC
     year2: ItemTensorMMDC
-    labels: Tensor  # dim (H,W)
-    mask_labels: Tensor | None = None  # dim (H,W)
+    raster: Tensor  # dim (H,W)
+    mask_raster: Tensor | None = None  # dim (H,W)
 
     def apply_padding(self, paddmmdc: PaddingMMDC):
         return CDInput(
             year1=self.year1.apply_padding(paddmmdc),
             year2=self.year2.apply_padding(paddmmdc),
-            labels=self.labels,
-            mask_labels=self.mask_labels,
+            raster=self.raster,
+            mask_raster=self.mask_raster,
         )
