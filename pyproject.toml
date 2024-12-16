@@ -13,10 +13,6 @@ dev = ["perflint>=0.8.1,<0.9", "isort", "black>=24.10.0,<25", "pyupgrade>=3.19.0
 build-backend = "hatchling.build"
 requires = ["hatchling"]
 
-[tool.pixi.pypi-options]
-index-url = "https://pypi.org/simple"
-extra-index-urls = ["https://download.pytorch.org/whl/cu118"]
-
 [tool.pixi.project]
 channels = ["conda-forge","pytorch"]
 platforms = ["linux-64"]

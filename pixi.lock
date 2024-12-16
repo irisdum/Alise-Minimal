@@ -6,7 +6,6 @@ environments:
     - url: https://conda.anaconda.org/pytorch/
     indexes:
     - https://pypi.org/simple
-    - https://download.pytorch.org/whl/cu118
     packages:
       linux-64:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
@@ -157,7 +156,6 @@ environments:
     - url: https://conda.anaconda.org/pytorch/
     indexes:
     - https://pypi.org/simple
-    - https://download.pytorch.org/whl/cu118
     packages:
       linux-64:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
@@ -401,7 +399,7 @@ packages:
   name: alise-minimal
   version: 0.1.0
   path: .
-  sha256: 98562d8003fd290d9d3e745cf8faed65e0a63352d59fc06dc00c466245c5fe9f
+  sha256: 626617708a01dbf02cc127b7a982069d4e78660e2381f2712ea7d62cbe4723b9
   requires_dist:
   - perflint>=0.8.1,<0.9 ; extra == 'dev'
   - isort ; extra == 'dev'
