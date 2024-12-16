@@ -11,3 +11,4 @@ def test_pastiscddataset():
     assert isinstance(item, CDInput)
     assert item.year1.s2.sits.shape[0] == item.year1.s2.positions.shape[0]
     assert item.year2.s2.sits.shape[0] == item.year2.s2.positions.shape[0]
+    assert item.year2.s2.mask.mask_cld.shape[0] == item.year2.s2.positions.shape[0]

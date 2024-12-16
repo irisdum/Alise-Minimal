@@ -48,7 +48,10 @@ def from_dict2mask(input_dict) -> MaskMod:
     -------
 
     """
-    return MaskMod(mask_scl=input_dict["mask_slc"], mask_cld=input_dict["mask_cld"])
+    return MaskMod(
+        mask_scl=rearrange(input_dict["mask_slc"], "c t h w -> t c h w "),
+        mask_cld=rearrange(input_dict["mask_cld"], "c t h w -> t c h w"),
+    )
 
 
 def from_dict2sits(input_dict: dict) -> ItemTensorMMDC:
@@ -128,6 +131,7 @@ class CropRotDataset(Dataset):
 
         """
         paths = self.id_patches[item]  # under the form of 129_3.pt
+        print(paths)
         load_sample: dict = torch.load(
             os.path.join(
                 self.folder,
