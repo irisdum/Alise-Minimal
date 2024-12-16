@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 import torch
+from einops import rearrange
 from torch.utils.data import Dataset
 
 from alise_minimal.data.dataset.sample_class import (
@@ -62,7 +63,11 @@ def from_dict2sits(input_dict: dict) -> ItemTensorMMDC:
 
     """
     mask = from_dict2mask(input_dict["mask"])
-    one_mod = OneMod(sits=input_dict["sits"], positions=input_dict["doy"], mask=mask)
+    one_mod = OneMod(
+        sits=rearrange(input_dict["sits"], "c t h w -> t c h w"),
+        positions=input_dict["doy"],
+        mask=mask,
+    )
     return ItemTensorMMDC(s2=one_mod)
 
 
