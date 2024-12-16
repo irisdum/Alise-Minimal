@@ -10,8 +10,9 @@ class SegBatch:
     """
     sits: B T C H W
     positions: B T
-    pad_mask: B T
-    labels: B H W
+    pad_mask: B T boolean Tensor. True means the value will be
+    *ignored* in the attention
+    labels: B H W (long Tensor)
     """
 
     sits: Tensor
