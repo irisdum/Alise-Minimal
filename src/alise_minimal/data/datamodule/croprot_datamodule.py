@@ -40,6 +40,23 @@ class CropRotDataModule(TemplateDataModule):
         self.s2_transform = load_transform_one_mod(
             path_dir_csv=self.path_dir_csv, mod="s2"
         )
+        if dict_classes is None:
+            dict_classes = dict(
+                zip(
+                    [5, 6, 7, 8, 9, 10, 11, 12, 13],
+                    [
+                        "rapeseed",
+                        "cereal",
+                        "proteaginous",
+                        "soybean",
+                        "sunflower",
+                        "corn",
+                        "rice",
+                        "tuber",
+                        "grassland",
+                    ],
+                )
+            )
         self.dict_classes = dict_classes
         self.labels = list(self.dict_classes.values())
         self.num_classes = len(self.dict_classes)
