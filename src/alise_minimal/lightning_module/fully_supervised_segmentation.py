@@ -113,6 +113,18 @@ def build_alise_fs_seg(
     decoder_config: MLPDecoderConfig,
     train_config: FSSegTrainConfig,
 ) -> AliseFSSeg:
+    """
+
+    Parameters
+    ----------
+    alise_build_config :
+    decoder_config :
+    train_config :
+
+    Returns
+    -------
+
+    """
     alise = build_alise(alise_build_config)
     mlp = MLPDecoder(decoder_config)
     alis_fs_seg = AliseFSSeg(alise=alise, decoder=mlp, train_config=train_config)

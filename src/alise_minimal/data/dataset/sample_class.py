@@ -19,14 +19,17 @@ class MaskMod:
     padd_mask: Tensor | None = None  # T  # 1 if the date has been padded
 
     def merge_mask(self) -> Tensor:
-        cld_mask = self.mask_cld == 1
-        # my_logger.debug(f"mask cld in fun {cld_mask[0, :, 0, 0]}")
-        nan_mask = self.mask_scl == 0
-        cld_mask_scl = torch.logical_and(self.mask_scl > 6, self.mask_scl < 11)
-        cld_mask_scl = torch.logical_or(cld_mask_scl, self.mask_scl < 2)
-        cld_mask_scl = torch.logical_or(cld_mask_scl, self.mask_scl == 3)
-        cld_mask = torch.logical_or(cld_mask, cld_mask_scl)
-        return torch.logical_or(cld_mask, nan_mask)
+        if (self.mask_cld is not None) and (self.mask_scl is not None):
+            cld_mask = self.mask_cld == 1
+            # my_logger.debug(f"mask cld in fun {cld_mask[0, :, 0, 0]}")
+            nan_mask = self.mask_scl == 0
+            cld_mask_scl = torch.logical_and(self.mask_scl > 6, self.mask_scl < 11)
+            cld_mask_scl = torch.logical_or(cld_mask_scl, self.mask_scl < 2)
+            cld_mask_scl = torch.logical_or(cld_mask_scl, self.mask_scl == 3)
+            cld_mask = torch.logical_or(cld_mask, cld_mask_scl)
+            return torch.logical_or(cld_mask, nan_mask)
+        else:
+            raise NotImplementedError
 
 
 @dataclass
@@ -53,7 +56,7 @@ class OneMod:
 
     sits: Tensor
     positions: Tensor
-    mask: MaskMod = None
+    mask: MaskMod | None = None
 
     def apply_padding(self, max_len: int, allow_padd=True):
         t = self.sits.shape[0]

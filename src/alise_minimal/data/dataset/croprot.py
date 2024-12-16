@@ -30,7 +30,7 @@ def create_dataset_csv(dataset_path: str, dataset_name: str):
     """
     iterate_items = Path(dataset_path).rglob("*.pt")
     l_files = []
-    for idx, path in enumerate(iterate_items):
+    for _, path in enumerate(iterate_items):
         # print(path)
         l_files += [path]
     df = pd.DataFrame(l_files, columns=["path"])

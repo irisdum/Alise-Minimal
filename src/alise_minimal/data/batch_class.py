@@ -28,7 +28,8 @@ class SITSBatch:
         self.sits = self.sits.pin_memory()
         self.positions = self.positions.pin_memory()
         self.pad_mask = self.pad_mask.pin_memory()
-        self.cld_mask = self.cld_mask.pin_memory()
+        if self.cld_mask is not None:
+            self.cld_mask = self.cld_mask.pin_memory()
         return self
 
     def to_device(self, device):
@@ -45,7 +46,8 @@ class SITSBatch:
         self.sits = self.sits.to(device)
         self.positions = self.positions.to(device)
         self.pad_mask = self.pad_mask.to(device)
-        self.cld_mask = self.cld_mask.to(device)
+        if self.cld_mask is not None:
+            self.cld_mask = self.cld_mask.to(device)
         return self
 
 

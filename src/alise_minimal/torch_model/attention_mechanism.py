@@ -41,7 +41,7 @@ class LearnedQMultiHeadAttention(nn.Module):
         self.fc1_k = nn.Linear(config.d_in, config.n_head * config.d_k, bias=False)
         nn.init.normal_(self.fc1_k.weight, mean=0, std=np.sqrt(2.0 / (config.d_k)))
 
-    def forward(self, X: Tensor, pad_mask: Tensor = None) -> Tensor:
+    def forward(self, X: Tensor, pad_mask: Tensor | None = None) -> Tensor:
         """
 
         Args:

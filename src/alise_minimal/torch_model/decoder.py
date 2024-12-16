@@ -20,6 +20,10 @@ class MLPDecoderConfig:
 
 
 class MLPDecoder(nn.Module):
+    """
+    a simple MLP
+    """
+
     def __init__(self, config: MLPDecoderConfig):
         super().__init__()
         self.layer = nn.Sequential(

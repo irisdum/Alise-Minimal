@@ -9,7 +9,7 @@ class Clip(torch.nn.Module):
     Clip transform for data, clip each band between two values qmin and qmax
     """
 
-    def __init__(self, qmin: list, qmax: list, inplace=False, s2_partial: bool = False):
+    def __init__(self, qmin: list, qmax: list, s2_partial: bool = False):
         super().__init__()
 
         self.qmin = rearrange(
