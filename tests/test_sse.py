@@ -1,8 +1,10 @@
+import pytest
 import torch
 
 from alise_minimal.torch_model.sse import Unet, UnetConfig
 
 
+@pytest.mark.local
 def test_unet_forward():
     B, C, H, W = 2, 10, 64, 64
     unet_config = UnetConfig(

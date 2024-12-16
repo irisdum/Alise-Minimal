@@ -1,3 +1,4 @@
+import pytest
 import torch
 
 from alise_minimal.torch_model.attention_mechanism import (
@@ -6,6 +7,7 @@ from alise_minimal.torch_model.attention_mechanism import (
 )
 
 
+@pytest.mark.local
 def test_forward():
     d_model, n_q = 64, 10
     B, T = 8, 30

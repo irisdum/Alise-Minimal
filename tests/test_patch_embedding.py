@@ -1,3 +1,4 @@
+import pytest
 import torch
 
 from alise_minimal.torch_model.patch_embedding import PatchEmbedding
@@ -5,6 +6,7 @@ from alise_minimal.torch_model.sse import Unet, UnetConfig
 from alise_minimal.torch_model.temporal_positional_encoder import PositionalEncoder
 
 
+@pytest.mark.local
 def test_forward():
     B, T, C, H, W = 2, 30, 10, 64, 64
     d_model = 64

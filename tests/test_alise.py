@@ -1,3 +1,4 @@
+import pytest
 import torch
 
 from alise_minimal.torch_model.alise import (
@@ -10,6 +11,7 @@ from alise_minimal.torch_model.attention_mechanism import ConfigLQMHA
 from alise_minimal.torch_model.sse import UnetConfig
 
 
+@pytest.mark.local
 def test_forward():
     B, T, C, H, W = 2, 10, 3, 64, 64
     d_model = 64

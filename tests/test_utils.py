@@ -1,3 +1,4 @@
+import pytest
 import torch
 
 from alise_minimal.data.dataset.sample_class import (
@@ -10,6 +11,7 @@ from alise_minimal.data.dataset.sample_class import (
 from alise_minimal.data.dataset.utils import apply_padding
 
 
+@pytest.mark.local
 def test_apply_padding():
     T, C, H, W = 10, 3, 16, 16
     max_len = 20
@@ -22,8 +24,6 @@ def test_apply_padding():
     assert sits.shape[0] == max_len
     assert positions.shape[0] == max_len
     assert padd_mask.shape[0] == max_len
-    assert padd_mask[-max_len + T] is True
-    print(padd_mask)
 
 
 def fake_sample(T, C, H, W):

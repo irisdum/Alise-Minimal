@@ -1,8 +1,10 @@
+import pytest
 import torch
 
 from alise_minimal.torch_model.temporal_positional_encoder import PositionalEncoder
 
 
+@pytest.mark.local
 def test_forward():
     B, T, d_model = 2, 30, 32
     input = torch.rand(B, T)

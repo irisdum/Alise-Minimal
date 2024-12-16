@@ -54,7 +54,7 @@ dev = { features = ["dev"], solve-group = "default" }
 [tool.pytest.ini_options]
 addopts = "--cov=alise_minimal"
 testpaths = ["tests"]
-markers = ["trex"]
+markers = ["trex","local"]
 
 [tool.mypy]
 python_version = "3.13"

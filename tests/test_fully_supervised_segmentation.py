@@ -1,8 +1,9 @@
+import pytest
 import torch.nn
 import torchmetrics
 from torchmetrics import MetricCollection
 
-from alise_minimal.data.batch_class import SegBatch
+from alise_minimal.data.batch_class import CDBInput, SegBatch, SITSBatch
 from alise_minimal.lightning_module.fully_supervised_segmentation import (
     FSSegTrainConfig,
     build_alise_fs_seg,
@@ -33,6 +34,28 @@ def create_fake_input(B, T, C, H, W) -> SegBatch:
     )
 
 
+def create_fake_cd_input(B, T, C, H, W):
+    year1 = SITSBatch(
+        sits=torch.rand(B, T, C, H, W),
+        positions=torch.rand(B, T),
+        pad_mask=torch.zeros(B, T).bool(),
+        cld_mask=torch.zeros(B, T, C, H, W),
+    )
+    year2 = SITSBatch(
+        sits=torch.rand(B, T, C, H, W),
+        positions=torch.rand(B, T),
+        pad_mask=torch.zeros(B, T).bool(),
+        cld_mask=torch.zeros(B, T, C, H, W),
+    )
+    return CDBInput(
+        year1,
+        year2,
+        label=torch.rand(B, 3, H, W).long(),
+        mask_label=torch.zeros(B, 3, H, W).long(),
+    )
+
+
+@pytest.mark.local
 def test_create_alise_fully_supervised_segmentation():
     B, T, C, H, W = 2, 10, 3, 64, 64
     d_model = 64
@@ -82,6 +105,6 @@ def test_create_alise_fully_supervised_segmentation():
         decoder_config=config_decoder,
         train_config=train_config,
     )
-    fake_input = create_fake_input(B, T, C, H, W)
+    fake_input = create_fake_cd_input(B, T, C, H, W)
     output, loss = alise_fs_seg_module.shared_step(fake_input)
     assert output.shape == (B, n_class, H, W)
