@@ -13,3 +13,6 @@ pylint:
 	pylint --ignore=$(PYLINT_IGNORED) src/ tests/ --load-plugins=perflint
 
 check: pylint ruff mypy test
+
+python_kernel:
+	python -m ipykernel install --user --name=alise_kernel
