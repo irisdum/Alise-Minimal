@@ -1,4 +1,5 @@
-"""File associated to fullsy supervised training of ALISE"""
+"""File associated to fully supervised training of ALISE.
+This example is given with CropRot dataset batch"""
 
 from dataclasses import dataclass
 
@@ -44,8 +45,7 @@ class AliseFSSeg(TemplateModule):
         -------
         the output of ALISE
         """
-
-        x = self.model.forward(
+        x = self.model.forward(  # TODO change that if you work with other types of data
             sits=batch.year1.sits,
             positions=batch.year1.positions,
             pad_mask=batch.year1.pad_mask,
@@ -86,9 +86,9 @@ class AliseFSSeg(TemplateModule):
         self.val_metrics.update(out, batch.label[:, 0, ...])
 
     def on_validation_epoch_end(self) -> None:
-        self.val_metrics.compute()
+        outputs = self.val_metrics.compute()
         self.log_dict(
-            self.val_metrics,
+            outputs,
             on_epoch=True,
             batch_size=self.bs,
             prog_bar=True,
@@ -99,13 +99,15 @@ class AliseFSSeg(TemplateModule):
         self.test_metrics.update(out, batch.label[:, 0, ...])
 
     def on_test_epoch_end(self) -> None:
-        self.test_metrics.compute()
+        outputs = self.test_metrics.compute()
+        outputs = {k: v.to(device="cpu", non_blocking=True) for k, v in outputs.items()}
         self.log_dict(
-            self.test_metrics,
+            outputs,
             on_epoch=True,
             batch_size=self.bs,
             prog_bar=True,
         )
+        self.save_test_metrics = outputs
 
 
 def build_alise_fs_seg(

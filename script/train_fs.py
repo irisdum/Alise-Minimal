@@ -5,6 +5,7 @@ import signal
 from pathlib import Path
 
 import hydra
+import torch
 import torchmetrics
 from hydra.utils import instantiate
 from lightning import Trainer
@@ -52,10 +53,16 @@ def load_train_config(config: DictConfig, num_class: int):
         metrics=MetricCollection(
             {
                 "accuracy": torchmetrics.Accuracy(
-                    task="multiclass", num_classes=num_class + 1
+                    task="multiclass", num_classes=num_class + 1, ignore_index=0
                 ),
                 "precision": torchmetrics.Precision(
-                    task="multiclass", num_classes=num_class + 1
+                    task="multiclass", num_classes=num_class + 1, ignore_index=0
+                ),
+                "f1score_class": torchmetrics.classification.MulticlassF1Score(
+                    num_classes=num_class + 1, average="macro", ignore_index=0
+                ),
+                "miou": torchmetrics.classification.MulticlassJaccardIndex(
+                    num_classes=num_class + 1, average="macro", ignore_index=0
                 ),
             }
         ),
@@ -144,6 +151,7 @@ def main(myconfig: DictConfig):
 
     my_trainer.fit(pl_module, datamodule=datamodule, ckpt_path=myconfig.ckpt_path)
     my_trainer.test(pl_module, datamodule)
+    torch.save(pl_module.save_test_metrics, "test_metrics.pt")
 
 
 if __name__ == "__main__":
